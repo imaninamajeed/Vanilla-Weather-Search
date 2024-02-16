@@ -29,9 +29,43 @@ function searchCity(city) {
 
 function refreshWeather(response) {
 	let temperatureElement = document.querySelector("#weather-app-temperature");
-	let temperature = response.data.temperature.current;
-	alert(temperature);
 	let cityElement = document.querySelector("#weather-app-city");
-	cityElement.innerHTML = response.data.city;
+	let descriptionElement = document.querySelector("#description");
+	let humidityElement = document.querySelector("#humidity");
+	let windSpeedElement = document.querySelector("#wind-speed");
+	let timeElement = document.querySelector("#time");
+	let iconElement = document.querySelector("#weather-app-icon");
+
+	let temperature = response.data.temperature.current;
+	let date = new Date(response.data.time * 1000);
+
 	temperatureElement.innerHTML = Math.round(temperature);
+	cityElement.innerHTML = response.data.city;
+	descriptionElement.innerHTML = response.data.condition.description;
+	humidityElement.innerHTML = `${response.data.temperature.humidity}%`;
+	windSpeedElement.innerHTML = `${response.data.wind.speed}km/h`;
+	timeElement.innerHTML = formatDate(date);
+	iconElement.innerHTML = `<img src="${response.data.condition.icon_url}" class="weather-app-icon" />`;
+}
+
+function formatDate(date) {
+	let min = date.getMinutes();
+	let hr = date.getHours();
+	let days = [
+		"Sunday",
+		"Monday",
+		"Tuesday",
+		"Wednesday",
+		"Thursday",
+		"Friday",
+		"Saturday",
+	];
+	let day = days[date.getDay()];
+
+	// add zero for 01 until 09 mins (display purpose)
+	if (min < 10) {
+		min = `0${min}`;
+	}
+
+	return `${day} ${hr}:${min}`;
 }
